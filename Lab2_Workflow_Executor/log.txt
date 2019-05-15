@@ -1,0 +1,18 @@
+мая 12, 2019 3:23:44 PM WorkflowExecutor work
+FINE: WorkflowReader return success
+мая 12, 2019 3:23:44 PM WorkflowExecutor work
+FINE: BlockFactory return success
+мая 12, 2019 3:23:44 PM WorkflowExecutor work
+FINE: Starting execute pipeline
+мая 12, 2019 3:23:44 PM WorkflowExecutor work
+FINER: readfile execute correctly
+мая 12, 2019 3:23:44 PM WorkflowExecutor work
+FINER: sort execute correctly
+мая 12, 2019 3:23:44 PM WorkflowExecutor work
+FINER: replace execute correctly
+мая 12, 2019 3:23:44 PM WorkflowExecutor work
+FINER: sort execute correctly
+мая 12, 2019 3:23:44 PM WorkflowExecutor work
+FINER: writefile execute correctly
+мая 12, 2019 3:23:44 PM WorkflowExecutor work
+FINE: End of working
