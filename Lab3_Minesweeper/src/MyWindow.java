@@ -23,9 +23,19 @@ public class MyWindow extends JFrame implements PropertyChangeListener {
             }
         JMenuBar menuBar = new JMenuBar();
         JMenuItem item1 = new JMenuItem("New game");
-        JMenuItem item2 = new JMenuItem("High Scores");
+        JMenuItem item2 = new JMenuItem("Settings");
         JMenuItem item3 = new JMenuItem("About");
+
         item1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.newGame();
+                view.endGame();
+                view.newGame();
+            }
+        });
+
+        item2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                // controller.setNewSettings("0", "0", "0");
@@ -44,6 +54,13 @@ public class MyWindow extends JFrame implements PropertyChangeListener {
                 }
             }
         });
+        item3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(MyWindow.this, "Game developer: Anastasia\nAll rights is mine.", "Dialog Window", JOptionPane.DEFAULT_OPTION);
+            }
+        });
+
         menuBar.add(item1);
         menuBar.add(item2);
         menuBar.add(item3);
