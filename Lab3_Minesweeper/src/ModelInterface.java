@@ -6,4 +6,6 @@ public interface ModelInterface {
     boolean isGameOver();
     void newGame();
     int[][] board();
+
+    boolean isNewBoard();
 }

@@ -108,6 +108,16 @@ public class Model implements ModelInterface{
         return gameOver;
     }
 
+    @Override
+    public boolean isNewBoard() {
+        for(int i = 0; i < horizontal; ++i)
+            for (int j = 0; j < vertical; ++j) {
+                if (playerField[i][j] != -1)
+                    return false;
+            }
+        return true;
+    }
+
 }
 
 

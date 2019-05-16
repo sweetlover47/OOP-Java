@@ -3,6 +3,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.*;
 import java.util.concurrent.Flow;
 
@@ -11,11 +13,11 @@ public class ControllerGUI implements ControllerInterface {
     private Model model;
     private Position pos;
     private int turn;
+    private boolean firstClick = false;
     private ViewInterface view;
     private boolean isChanged = true;
-    ControllerGUI(ModelInterface model) {
-        this.model = (Model) model;
-    }
+
+    ControllerGUI(ModelInterface model) { this.model = (Model) model; }
     public BoardListener getListener(int x, int y){
         return new BoardListener(x, y);
     }
@@ -39,11 +41,20 @@ public class ControllerGUI implements ControllerInterface {
             button.getModel().setArmed(true);
             if (SwingUtilities.isLeftMouseButton(e)) {
                 pos = new Position(x, y);
+                if (model.isNewBoard())
+                    firstClick = true;
                 change(2);
+
             }
             if (SwingUtilities.isRightMouseButton(e)){
                 pos = new Position(x, y);
+                if (model.isNewBoard())
+                    firstClick = true;
                 change(1);
+            }
+            if (firstClick) {
+                runCounter();
+                firstClick = false;
             }
         }
 
@@ -100,8 +111,10 @@ public class ControllerGUI implements ControllerInterface {
 
     @Override
     public void setSettings() {
-        if (horizontal != 9 || vertical != 9 || mines != 10)
+        if (!this.incorrectValues() && (horizontal != 9 || vertical != 9 || mines != 10))
             model = new Model(horizontal, vertical, mines);
+        else
+            turn = -10;
     }
 
     @Override
@@ -152,5 +165,43 @@ public class ControllerGUI implements ControllerInterface {
         if (vertical == 0 || horizontal == 0 || mines == 0 || mines > (vertical*horizontal - 1))
             return true;
         return false;
+    }
+
+
+    private int outCounter = 0;
+    private PropertyChangeSupport support = new PropertyChangeSupport(this);
+    private void runCounter() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int counter = 0;
+                while (!isGameOver() && !isWin()) {
+                    try {
+                        Thread.sleep(1000);
+                        //System.out.println(++counter);
+                        ++counter;
+                        setVariable(counter);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+        return;
+    }
+
+
+    public void addListener(PropertyChangeListener listener) {
+        support.addPropertyChangeListener(listener);
+    }
+
+    public void removeListener(PropertyChangeListener listener) {
+        support.removePropertyChangeListener(listener);
+    }
+
+    public void setVariable(int counter) {
+        int oldValue = outCounter;
+        outCounter = counter;
+        support.firePropertyChange("counter", oldValue, counter);
     }
 }

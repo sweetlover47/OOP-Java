@@ -2,9 +2,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-public class MyWindow extends JFrame {
+public class MyWindow extends JFrame implements PropertyChangeListener {
     private final int imageSize = (new ImageIcon("src\\resources\\0.png")).getIconHeight();
+    private int counter;
     MyWindow(int x, int y, ViewGUI view, ControllerGUI controller) {
         super("Minesweeper");
         super.setSize( x * imageSize, y * imageSize + 70 );
@@ -18,7 +21,6 @@ public class MyWindow extends JFrame {
                 button.addMouseListener(controller.getListener(i, j));
                 panel.add(button);
             }
-
         JMenuBar menuBar = new JMenuBar();
         JMenuItem item1 = new JMenuItem("New game");
         JMenuItem item2 = new JMenuItem("High Scores");
@@ -26,19 +28,36 @@ public class MyWindow extends JFrame {
         item1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.newGame();
+               // controller.setNewSettings("0", "0", "0");
+               // view.installSettings();
+                /*controller.newGame();
                 view.endGame();
-                view.newGame();
+                view.newGame();*/
+                view.endGame();
+                controller.setNewSettings("0","0","0");
+                view.installSettings();
+                controller.setSettings();
+                if (controller.getTurn() != -10) {
+                    view.quitSettings();
+                    controller.setView(view);
+                    view.startGame(controller.getSize());
+                }
             }
         });
         menuBar.add(item1);
         menuBar.add(item2);
         menuBar.add(item3);
         setJMenuBar(menuBar);
-        //panel.add(menuBar, BorderLayout.PAGE_START);
 
         Container container = getContentPane();
         container.add(panel, BorderLayout.CENTER);
         setResizable(false);
+        controller.addListener(this);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        System.out.println(evt.getNewValue());
+        counter = Integer.parseInt(evt.getNewValue().toString());
     }
 }

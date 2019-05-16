@@ -1,4 +1,6 @@
 import javax.swing.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 /* Доделать MyWindow, install/quit Settings */
 public class ViewGUI implements ViewInterface {
@@ -33,16 +35,11 @@ public class ViewGUI implements ViewInterface {
 
     @Override
     public void installSettings() {
-        settingsWindow = new SettingsWindow((ControllerGUI) controller);
-        while (controller.incorrectValues()) {
-            settingsWindow.setVisible(true);
-       }
-
+        settingsWindow = new SettingsWindow((ControllerGUI) controller, this);
     }
 
     @Override
     public void quitSettings() {
-        settingsWindow.setVisible(false);
         settingsWindow.dispose();
     }
 
@@ -58,6 +55,7 @@ public class ViewGUI implements ViewInterface {
     @Override
     public void endGame() {
         game.setVisible(false);
+        game.dispose();
     }
 
     @Override

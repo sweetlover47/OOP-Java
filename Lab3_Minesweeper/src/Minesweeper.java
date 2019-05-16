@@ -7,11 +7,13 @@ public class Minesweeper {
         this.controller = controller;
         this.view = view;
         view.installSettings();
-        /*controller.setNewSettings("9", "9", "10");*/
+        controller.setNewSettings("9", "9", "10");
         controller.setSettings();
-        view.quitSettings();
-        controller.setView(view);
-        view.startGame(controller.getSize());
+        if (controller.getTurn() != -10) {
+            view.quitSettings();
+            controller.setView(view);
+            view.startGame(controller.getSize());
+        }
     }
     public void run() {
         while (true) {
@@ -42,11 +44,11 @@ public class Minesweeper {
                 view.sendMessage("You win!\nStarting new game...");
             }
             if (controller.isWin() || controller.isGameOver()) {
-                view.installSettings();
+                //view.installSettings();
                 controller.newGame();
                 view.endGame();
                 view.newGame();
-                view.quitSettings();
+                //view.quitSettings();
             }
         }
     }
