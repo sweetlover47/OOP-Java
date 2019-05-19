@@ -12,8 +12,8 @@ public class WorkflowExecutor {
         try {
             WorkflowReader wfReader = new WorkflowReader(inputFile);
             logger.log(Level.FINE, "WorkflowReader return success");
-            BlocksFactory blocksFactory = new BlocksFactory();
-            blocksFactory.getInstance();
+            //BlocksFactory blocksFactory = new BlocksFactory();
+            //blocksFactory.getInstance();
             logger.log(Level.FINE, "BlockFactory return success");
             String result = null;
             Map<Integer, BlockContext> map = wfReader.readBlock();
@@ -22,7 +22,7 @@ public class WorkflowExecutor {
             for (Integer blockID: pipeline) {
                 String currentBlockName = map.get(blockID).getCommand();
                 String[] currentBlockArgs = map.get(blockID).getArgs();
-                Block currentBlock = blocksFactory.getBlock(currentBlockName);
+                Block currentBlock = BlocksFactory.getInstance().getBlock(currentBlockName);
                 if (currentBlock != null)
                     result = currentBlock.execute(currentBlockArgs, result);
                 logger.log(Level.FINER, currentBlockName + " execute correctly");

@@ -1,5 +1,6 @@
 package Blocks;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -7,11 +8,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class BlocksFactory {
-    private static BlocksFactory f;
+    private static volatile BlocksFactory f;
     private Map<String, Class<Block>> blocksMap;
     private static final Logger logger = Logger.getLogger(BlocksFactory.class.getName());
 
-    public BlocksFactory() {
+    private BlocksFactory() throws IOException {
         try {
             blocksMap = new HashMap<>();
             Properties properties = new Properties();
@@ -26,16 +27,21 @@ public class BlocksFactory {
 
         } catch(Exception e) {
             logger.log(Level.SEVERE, e.toString(), e);
+            throw e;
         }
     }
 
-    public static BlocksFactory getInstance() {
-        BlocksFactory newF = f;
-        if (f == null) {
-            newF = new BlocksFactory();
-            f = newF;
+    public static BlocksFactory getInstance() throws IOException {/*synchronized double checked singleton*/
+        BlocksFactory localF = f;
+        if (localF == null) {
+            synchronized (BlocksFactory.class) {
+                localF = f;
+                if (localF == null) {
+                    localF = f = new BlocksFactory();
+                }
+            }
         }
-        return newF;
+        return localF;
     }
 
     public Block getBlock(final String name) {
